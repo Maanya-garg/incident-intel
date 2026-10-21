@@ -1,0 +1,38 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# java / maven / gradle
+target/
+build/
+.gradle/
+*.class
+.idea/
+*.iml
+
+# node / next
+node_modules/
+.next/
+out/
+npm-debug.log*
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# project data (never commit uploads or datasets you may not redistribute)
+storage/
+uploads/
+datagen/output/
+eval/raw/
