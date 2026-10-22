@@ -24,7 +24,7 @@ Your project is a REST API (Spring Boot) called by a browser (Next.js) and by an
 - [✓] Install `curl` (or Bruno/Postman). Call a public API, for example `curl https://api.github.com/users/YOUR_NAME`, and read the JSON.
 - [✓] Read blueprint sections 1 to 5 carefully. Skim 6 to 21 (you will come back to each one in its phase).
 - [✓] Explain what a port is and why Postgres uses 5432.
-- 
+  
 ## 🎤 Interview question this prepares
 Explain what happens between typing a URL and seeing data (HTTP basics).
 
