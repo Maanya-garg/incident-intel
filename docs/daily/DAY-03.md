@@ -1,8 +1,8 @@
 # Day 03 — Java 1: install, syntax, types, control flow, methods
 
-**Week 1** · **Phase P0: Foundations (Git, HTTP, Java)** · 
+**Week 1** · **Phase P0: Foundations (Git, HTTP, Java)** 
 
-**Planned:** 5 h (Learn 2.5 · Build and test 2 · Document 0.5) · 
+**Planned:** 5 h (Learn 2.5 · Build and test 2 · Document 0.5) 
 
 **Status:** ✅ 
 
