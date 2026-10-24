@@ -4,7 +4,7 @@
 
 **Planned:** 5 h (Learn 2.5 · Build and test 2 · Document 0.5) 
 
-**Status:** ⬜ not started  (change to 🟨 in progress or ✅ done)
+**Status:** ✅ 
 
 ## 🎯 Goal for today
 You can model a log line as a class and define an interface with two implementations.
