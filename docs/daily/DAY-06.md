@@ -49,25 +49,20 @@ How do you handle malformed input robustly?
 **Date:** 26-10-26 &nbsp;&nbsp; **Actual hours:** 3 &nbsp;&nbsp; **Plan followed?** yes
 
 ### What I learned (explain it as if to a friend, in my own words)
-I learned how Java handles exceptions and why checked exceptions such as IOException need to be handled or declared with throws. I used try-with-resources while reading files so the BufferedReader is automatically closed after reading.
-I learned the basics of regex using Pattern and Matcher, including capturing groups for extracting parts of a log line. I used regex to parse different log formats and handle invalid input safely.
-I also learned how to read a file line by line using Files.newBufferedReader with UTF-8. If a file does not exist, Java throws NoSuchFileException, which is a type of IOException.
-I created the mini parser as a Maven project and used JUnit 5 to test the parsing rules. Running mvn test gives a quick way to check whether the parser is still working correctly.
-The main parser rule I learned is that one malformed log line should not crash the entire file. The parser should preserve the raw line, mark it as malformed when necessary, keep a missing timestamp as null, and convert an unknown log level to UNKNOWN.
+I built a Maven project (`java-mini-parser`) with JUnit and a mini parser that follows the real parser rules from Blueprint 5.2. Maven reads `pom.xml`, downloads the dependencies, compiles the code and runs the tests; the layout is `src/main/java` and `src/test/java`. I read a 30-line `sample.log` with `Files.newBufferedReader` inside try-with-resources, which closes the file automatically. I replaced the weak `split` approach with regex: `Pattern`, `Matcher` and named capturing groups pull out the date, time, level and message, and `matches()` forces the whole line to fit the pattern. I wrote three parsers (space style, bracket style, JSON-ish) behind the `LogParser` interface and a `MiniParser` that tries them in order. The rules hold: a missing timestamp stays `null` (the bracket style has only a time, so I never guess the date), an unknown level becomes `UNKNOWN`, the raw line is always kept, and a line nobody understands becomes a flagged entry (`malformed=true`) instead of an exception. I wrote 8 JUnit tests, one per rule and format plus one that checks that no line is dropped from the sample file, and ran them with `mvn test` through IntelliJ's Maven panel. I also used the IntelliJ debugger: a breakpoint, Step Over, Evaluate Expression, and I watched a `DateTimeParseException` jump into the `catch`.
 
 ### What confused me / still unclear
-Regex is still the part I find hardest to write from scratch. I understand the pattern better once I break it into groups, but I need more practice creating regex myself.
-I also need more practice deciding when to use try-catch and when to use throws.
-Maven and pom.xml are clearer now, but I still need more practice with dependencies and the Maven project structure.
+I did not read the planned sources (dev.java, JUnit user guide, Maven in 5 minutes); I learned by building with guidance. I used JUnit 6 (Jupiter 6.0.3) with Surefire 3.5.5 instead of the "JUnit 5" named in the plan, because it is the current major version and works with Java 21; final versions get pinned on Day 15. Known limits of my mini parser: the JSON-ish parser uses a regex, so a message with escaped quotes (like `"user said \"hi\""`) is cut at the backslash without any error, which is why a real JSON library comes later; the `catch (RuntimeException)` in `MiniParser` is silent, so a real parser bug would stay hidden and I need logging there; the space-style parser assumes UTC; stack-trace lines are not yet attached to the previous entry (Day 26); the regex only checks the shape, not the validity (a time like 99:99:99 passes the regex and fails later in `Instant.parse`).
+
 
 ### What broke and how I fixed it (error message, cause, fix)
-An invalid or missing file can cause an IOException / NoSuchFileException, so file-reading code needs proper exception handling.
-Invalid timestamps such as 99:99:99 should not be accepted as valid timestamps.
-Unknown levels such as NOTICE are converted to UNKNOWN instead of causing the parser to crash.
-Malformed lines are flagged instead of stopping the complete parsing process.
-I used JUnit tests to catch parsing mistakes and verify the expected behaviour for different formats and edge cases.
-
+- **A line that matched the regex but still blew up:** `2026-10-26 99:99:99 ERROR Invalid time`. The regex checks the shape (two digits, colon, two digits), not whether the time is real, so `Instant.parse` threw a `DateTimeParseException`. Fix: catch it inside the parser and return `Optional.empty()`, so `MiniParser` stores the line as `malformed=true` instead of crashing. I followed this path in the IntelliJ debugger.
+- **Known bug I found but did not fix:** the JSON-ish parser uses a regex, so a message with escaped quotes (`"user said \"hi\" and left"`) is cut at the backslash without any error. It stays like this until the real JSON parser on Day 26.
+- **Known limit:** the `catch (RuntimeException)` in `MiniParser` is silent, so a real parser bug would stay hidden. It needs logging later.
+  
 ### Commits and links
--notes 
+- Notes commit for Day 6 (hash from `git log --oneline`)
+- The code lives in `playground/java-mini-parser/`, which is local only and not pushed.
+  
 ### First step for tomorrow
-Day 7: Start connecting the Java concepts from the playground to the actual Spring Boot backend.
+Day 7: weekly review 1 and buffer: fix what did not click this week and write the first weekly summ
