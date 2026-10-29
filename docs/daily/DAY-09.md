@@ -1,10 +1,10 @@
 # Day 09 — Docker 2: Compose, named volumes, env files, healthchecks
 
-**Week 2** · **Phase P1: Environment and skeleton (Docker, SQL, design docs)** · **Blueprint:** Phase 1: Skeleton
+**Week 2** · **Phase P1: Environment and skeleton (Docker, SQL, design docs)**
 
-**Planned:** 4 h (Learn 2 · Build and test 1.5 · Document 0.5) · **Suggested date:** 2026-10-29 (Thu). Shift freely, the order matters, not the date.
+**Planned:** 4 h (Learn 2 · Build and test 1.5 · Document 0.5) · 
 
-**Status:** ⬜ not started  (change to 🟨 in progress or ✅ done)
+**Status:** ✅ 
 
 ## 🎯 Goal for today
 A `docker-compose.yml` starts Postgres with pgvector and a named volume, and data survives restarts.
@@ -19,23 +19,16 @@ This is the first real file of the project infrastructure. It also covers the fi
 | .env files and why secrets stay out of Git | Docker Compose docs: environment variables | Only: `.env` is read automatically, `.env.example` is committed. |
 
 ## 🔨 Build / do
-- [ ] Write `docker-compose.yml` with a `postgres` service using the pgvector image, a named volume `pgdata`, env from `.env`, and a `pg_isready` healthcheck.
-- [ ] Create `.env.example` with placeholders and add `.env` to `.gitignore`.
-- [ ] `docker compose up -d`, create a table, `docker compose down`, `docker compose up -d` again and confirm the table is still there.
-- [ ] Run `docker compose down -v` and confirm the data is now gone. Write when you would use each form.
-
-## ✅ Check yourself (answer in your own words in the notes below)
-1. What is a named volume and where does Docker keep it?
-2. What does `docker compose down -v` do that `down` alone does not?
-3. Why do we commit `.env.example` but not `.env`?
-4. What does a healthcheck add?
-5. What is the difference between `restart` and recreating a container?
+- [✓] Write `docker-compose.yml` with a `postgres` service using the pgvector image, a named volume `pgdata`, env from `.env`, and a `pg_isready` healthcheck.
+- [✓] Create `.env.example` with placeholders and add `.env` to `.gitignore`.
+- [✓] `docker compose up -d`, create a table, `docker compose down`, `docker compose up -d` again and confirm the table is still there.
+- [✓] Run `docker compose down -v` and confirm the data is now gone. Write when you would use each form.
 
 ## 🏁 Definition of done
-- [ ] Data survives `down` and `up`
-- [ ] `.env` is ignored by Git
-- [ ] All five check questions answered in your notes
-- [ ] Notes below filled in, work committed and pushed
+- [✓] Data survives `down` and `up`
+- [✓] `.env` is ignored by Git
+- [✓] All five check questions answered in your notes
+- [✓] Notes below filled in, work committed and pushed
 
 ## 💾 Suggested commit
 `feat(infra): compose with postgres+pgvector and named volume`
@@ -46,16 +39,22 @@ This is the first real file of the project infrastructure. It also covers the fi
 
 # 📝 My notes (fill in at the end of the day)
 
-**Date:** &nbsp;&nbsp; **Actual hours:** &nbsp;&nbsp; **Energy (1-5):** &nbsp;&nbsp; **Plan followed?** yes / partly / no
+**Date:** 29-10-26 &nbsp;&nbsp; **Actual hours:** 4 &nbsp;&nbsp; **Plan followed?** yes 
 
 ### What I learned (explain it as if to a friend, in my own words)
+Docker Compose allows multiple Docker configurations to be managed using a single docker-compose.yml file. We use it to run PostgreSQL with pgvector, configure ports and environment variables, and attach a named volume.
+A named volume stores database data separately from the container, so the data remains after docker compose down. .env stores local configuration and secrets, while .env.example contains safe placeholders and can be committed to Git.
+A healthcheck checks whether the PostgreSQL service is actually ready to accept connections.
 
 ### What confused me / still unclear
+Difference between docker compose down and docker compose down -v.
+Difference between restarting and recreating a container.
 
 ### What broke and how I fixed it (error message, cause, fix)
-
-### Answers to the check questions
+No major errors.
 
 ### Commits and links
+notes for day 9  
 
 ### First step for tomorrow
+Continue with PostgreSQL and SQL basics.
