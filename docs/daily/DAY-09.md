@@ -51,10 +51,16 @@ Difference between docker compose down and docker compose down -v.
 Difference between restarting and recreating a container.
 
 ### What broke and how I fixed it (error message, cause, fix)
-No major errors.
-
+Error: `'Set-Content' is not recognized as an internal or external command`.
+  Cause: I was in Command Prompt (cmd), but the command was for PowerShell.
+  Fix: used cmd commands instead: `(echo ...& echo ...) > .env`.
+- Error: `git push` rejected, `main -> main (fetch first)`.
+  Cause: GitHub has a commit that my computer does not have.
+  Status: (write here how you solved it, or "still open, TODO(day-09)")
+  
 ### Commits and links
-notes for day 9  
+Commit: feat(infra): compose with postgres+pgvector and named volume
 
 ### First step for tomorrow
-Continue with PostgreSQL and SQL basics.
+Day 10: SQL 1, create tables and use INSERT, SELECT, WHERE in psql,
+  using the Postgres container from today.
