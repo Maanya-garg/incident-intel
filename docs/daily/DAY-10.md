@@ -41,17 +41,45 @@ Every feature stores or queries data. The blueprint hand-writes SQL (Flyway migr
 **Date:** 30-10-26 &nbsp;&nbsp; **Actual hours:** 4 &nbsp;&nbsp; **Plan followed?** yes 
 
 ### What I learned (explain it as if to a friend, in my own words)
-SQL is used to store and retrieve data from relational databases. Tables contain rows and columns, and a primary key uniquely identifies each row.
-INSERT adds data, SELECT reads data, WHERE filters data, ORDER BY sorts data, LIMIT limits the number of rows, UPDATE changes data, and DELETE removes data.
-I learned basic data types like INT, BIGINT, TEXT, BOOLEAN, TIMESTAMPTZ, and JSONB. TIMESTAMPTZ is useful for logs because it stores timezone-aware timestamps.
+- A table is like a sheet, a column has a fixed name and type, and a row is
+  one record. A primary key is the column that makes every row unique.
+- I made a separate database `playground` for practice, so the project
+  database `incident_intel` stays safe.
+- I created `users` and `projects` by hand. `id` is a BIGINT primary key that
+  Postgres fills itself (GENERATED ALWAYS AS IDENTITY), and `created_at` is
+  TIMESTAMPTZ with DEFAULT now().
+- I inserted 3 users and 5 projects. Text goes in single quotes. I set
+  `created_at` by hand for the projects, because now() gives the same time to
+  all rows of one INSERT, and then "newest 2" would mean nothing.
+- I ran 15 queries: SELECT with WHERE, AND, ORDER BY ... DESC, LIMIT, a first
+  try of COUNT with GROUP BY, then UPDATE and DELETE.
+- UPDATE and DELETE must always have a WHERE. Without it they change or delete
+  every row.
+- I saved everything in `playground/sql/01_basics.sql`. It starts with
+  DROP TABLE IF EXISTS, so I can run it again from the top. I ran it with
+  `psql -d playground -v ON_ERROR_STOP=1 < file`, so it stops at the first error.
 
 ### What confused me / still unclear
 The main thing I needed to understand was why TIMESTAMPTZ is preferred for logs and why LIMIT without ORDER BY does not guarantee which rows are returned.
 
 ### What broke and how I fixed it (error message, cause, fix)
-No major errors.
+- Problem: my Day 9 `git push` was rejected, and `git status` said the branches
+  had diverged (1 and 9 different commits).
+  Cause: I edited my notes on the GitHub website, so GitHub had commits my
+  computer did not have.
+  Fix: `git fetch`, checked that no file was changed on both sides, then
+  `git pull --no-rebase --no-edit` (a merge commit) and `git push`.
+  Lesson: after editing on GitHub, run `git pull` on the computer before
+  working there.
+- Finding: `01_basics.sql` did not show in `git status`. `git check-ignore -v`
+  showed `.git/info/exclude` line 8: `/playground/`.
+
 
 ### Commits and links
-notes for today committed
+- No new commit for the SQL file: I decided to keep `playground/` local-only
+  (it is in `.git/info/exclude`), so `01_basics.sql` stays on my computer.
+- Git fix: merge commit f0f365c, pushed to GitHub.
+  
 ### First step for tomorrow
-Day 11:Continue with the next SQL topic and practice queries.
+- Day 11: SQL 2, constraints, foreign keys, joins, NULL and transactions,
+  using the `playground` database.
