@@ -53,7 +53,7 @@ I did not read the planned Docker documentation, I learned by doing the commands
 - **`Error response from daemon: container ... is not running` and status `Exited (255)`.** Cause: the `pg` container had stopped when Docker Desktop was closed or the computer was shut down; containers do not restart by themselves. Fix: `docker start pg`. (A `restart` policy in Compose will handle this on Day 9.)
 
 ### Commits and links
-- Notes commit for Day 8 (hash from `git log --oneline`)****
+- Notes commit for Day 8 (hash from `git log --oneline`)
   
 ### First step for tomorrow
 Day 9: write `docker-compose.yml` with Postgres, a named volume `pgdata` and a healthcheck, plus `.env.example`.
