@@ -46,19 +46,18 @@ NULL semantics in SQL and why `= NULL` fails.
 **Date:** 31-10-26 &nbsp;&nbsp; **Actual hours:** 4 &nbsp;&nbsp;  **Plan followed?** yes
 
 ### What I learned (explain it as if to a friend, in my own words)
-SQL constraints are rules enforced by the database. PRIMARY KEY uniquely identifies a row, FOREIGN KEY ensures that a value refers to an existing row in another table, UNIQUE prevents duplicate values, NOT NULL prevents missing values, CHECK enforces a condition, and DEFAULT provides a value automatically when no value is given.
-A JOIN is used to combine data from related tables. An INNER JOIN returns only rows where a matching row exists in both tables, while a LEFT JOIN keeps all rows from the left table even if there is no matching row on the right.
-NULL represents a missing or unknown value. NULL cannot be compared using =. To check for it, we use IS NULL. COALESCE can be used to provide another value when a value is NULL. NULLS LAST can be used when sorting so that rows with missing timestamps appear at the end.
-A transaction groups multiple database operations together. BEGIN starts a transaction, COMMIT permanently saves the changes, and ROLLBACK cancels the changes. A transaction is atomic, meaning either all the operations happen or none of them happen.
+Constraints are rules the database enforces, so bad data cannot get in. PRIMARY KEY identifies a row, FOREIGN KEY makes a value point to an existing row in another table, UNIQUE blocks duplicates (also for a combination of columns, like `UNIQUE (project_id, content_hash)`), NOT NULL blocks missing values, CHECK enforces a condition and DEFAULT fills a value when none is given. I built `projects`, `log_files` and `log_entries` in a separate practice database (`sqlplay`), so my practice tables cannot clash with the real tables Flyway will create later. `ts` allows NULL on purpose (a missing timestamp is never invented) while `raw_message` is NOT NULL (the raw line is always kept). NULL means "unknown", so `NULL = NULL` is not true but NULL, and `WHERE ts = NULL` returns nothing; I use `IS NULL`. In Postgres NULL sorts as the largest value, so `ORDER BY ts DESC` puts NULL first unless I write `NULLS LAST`. An INNER JOIN keeps only rows that match on both sides; a LEFT JOIN keeps every row of the left table and fills the right side with NULL when there is no match, and `LEFT JOIN ... WHERE right.id IS NULL` finds rows with no match. A transaction groups statements so that all of them happen or none: BEGIN, then COMMIT to save or ROLLBACK to cancel.
 
 ### What confused me / still unclear
-The main thing I found confusing was why NULL cannot be compared using =. I also needed to understand the difference between INNER JOIN and LEFT JOIN.
+I did not read the planned sources (postgresqltutorial.com, SQLBolt). The error in the transaction demo (a foreign key error in the second insert, after which Postgres says "current transaction is aborted" until I ROLLBACK) was confusing at first. I also noticed that failed inserts and rolled-back transactions still use up identity numbers, so ids can have gaps.
 
 ### What broke and how I fixed it (error message, cause, fix)
-No major errors. I intentionally broke database constraints such as inserting duplicate values, a NULL into a NOT NULL column, and an invalid foreign key to understand the errors produced by PostgreSQL.
+- On purpose I broke each rule and read the errors: a duplicate `(project_id, content_hash)` (unique violation), a NULL `raw_message` (not-null violation), a `project_id` that does not exist (foreign key violation), `line_number = 0` and `level = 'EROR'` (check violations), and deleting a project that still has files (foreign key violation from the other side). None of the bad rows got in.
+- I noticed my real Compose database showed `0.0.0.0:5432->5432` in `docker ps`, so it is reachable from my whole network, not only from my own computer. Fix planned: bind it to `127.0.0.1` in `docker-compose.yml`. 
 
 ### Commits and links
-No new commit/links for today.
+- Notes commit for Day 11 (hash from `git log --oneline`)
+- The SQL was run in `psql` against the practice database `sqlplay`; nothing from this day is pushed except these notes.
 
 ### First step for tomorrow
-Start Day 12 — SQL 3: aggregation, GROUP BY, HAVING, and window functions.
+Day 12: SQL 3 with GROUP BY, HAVING, indexes and EXPLAIN.
