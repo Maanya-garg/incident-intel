@@ -42,20 +42,25 @@ Template grouping is a GROUP BY. Fast log queries need indexes. The blueprint as
 **Date:** 1-11-2026 &nbsp;&nbsp; **Actual hours:** 4 &nbsp;&nbsp; **Plan followed?** yes 
 
 ### What I learned (explain it as if to a friend, in my own words)
-GROUP BY is used to group rows having the same value so that we can perform aggregate operations like COUNT, MIN, and MAX on each group. HAVING is used to filter the groups after aggregation.
-Indexes help PostgreSQL find rows faster without scanning the entire table. A B-tree index is useful for many common filtering and sorting queries.
-EXPLAIN shows how PostgreSQL plans to execute a query. EXPLAIN ANALYZE actually runs the query and shows the execution time and whether PostgreSQL used a Seq Scan or an Index Scan.
-A Seq Scan means PostgreSQL checks the rows sequentially. It is not always bad because for a small table, scanning the whole table can be faster than using an index.
-A composite index contains multiple columns. An index on (a, b) is most useful when the query filters using a, because a is the first column in the index.
+GROUP BY puts rows with the same value into one group so I can run COUNT, MIN and MAX on each group; HAVING filters the groups after they are built, while WHERE filters rows before grouping (so `WHERE count(*) > 5` is an error and I need HAVING). COUNT(*) counts every row, but COUNT(column), MIN and MAX skip NULLs. My error-group style query groups by message (later by service and normalized template) and returns the count, first seen and last seen, which is the SQL form of the `error_groups` table. An index is a separate sorted structure, so a range filter can jump to the right place instead of reading the whole table. EXPLAIN shows the plan and EXPLAIN ANALYZE really runs the query and shows the time, so I must not use it on INSERT or DELETE. A composite index on (a, b) is sorted by a first, so it helps queries that filter on a (alone or with b) and does not help much when only b is filtered, like a phone book sorted by surname then first name.
+
+**Before and after (200,000 fake rows in `scratch_logs`, query: count rows in a 10-minute `ts` window, about 588 rows):**
+- Before the index: `Parallel Seq Scan`, `Execution Time` 19.139 ms and 36.202 ms in the two runs I recorded (<add the other runs if you have them>). One run is not a reliable number, so I report the range.
+- After `CREATE INDEX ... (ts)`: plan `<Index Scan / Index Only Scan / Bitmap Index Scan>`, `Execution Time` <min> to <max> ms over <N> runs.
+- Composite index `(project_id, ts)`: Query A (filters on `project_id` and `ts`) used `<plan>`; Query B (filters only on `ts`) used `<plan>`.
+- The data is fake and perfectly sorted by `ts`, so these numbers do not predict real log files.
 
 ### What confused me / still unclear
-The main thing I found confusing was why an index can make INSERT, UPDATE, and DELETE slower. I also needed to understand why an index on (a, b) does not generally help much when a query filters only on b.
+I did not read the planned sources (use-the-index-luke.com and the PostgreSQL docs). Why an index slows INSERT, UPDATE and DELETE: every index is another sorted structure that Postgres must update on each write, so more indexes mean slower writes and more disk. I do not yet know how the planner decides between Seq Scan, Index Scan and Bitmap Index Scan.
 
 ### What broke and how I fixed it (error message, cause, fix)
-No major errors. I compared the query execution plan before and after creating an index and checked the difference using EXPLAIN ANALYZE.
+- The first `EXPLAIN ANALYZE` showed `Rows Removed by Filter: 132941` with `loops=3`, which multiplies to about 400,000 rows and 1,176 matches, double what I expected. `SELECT count(*)` returned 400000: the `INSERT ... generate_series` block had run twice. Fix: `TRUNCATE scratch_logs RESTART IDENTITY` (after checking `SELECT current_database()` was the practice database `sqlplay`), then one insert, giving 200000 rows. Lesson: check `count(*)` right after a bulk insert.
+- The output opened in psql's pager and showed `~` lines. Fix: `q` to leave it and `\pset pager off`.
+- A single run of `EXPLAIN ANALYZE` jumped between 19 and 36 ms, so I record a range over several runs.
 
 ### Commits and links
-notes commited 
+- Notes commit for Day 12 (hash from `git log --oneline`)
+- The practice table lives in the `sqlplay` database; no SQL file is pushed.
 
 ### First step for tomorrow
-SQL 4: CTEs, subqueries, and window functions
+Day 13: repo skeleton and the three design docs (analysis contract, evaluation spec, terminology).
