@@ -45,13 +45,41 @@ Why did you split your system into Spring Boot and a Python AI service?
 **Date:** 6-11-26 &nbsp;&nbsp; **Actual hours:** 4 &nbsp;&nbsp; **Plan followed?** yes 
 
 ### What I learned (explain it as if to a friend, in my own words)
-
+- I wrote four documents in VS Code: `docs/analysis-contract.md` (the JSON
+  output contract and its rules), `docs/terminology.md` (which words to use
+  and which to avoid), `docs/evaluation-spec.md` v0 (the component table) and
+  `docs/decisions/0001-service-split.md` (ADR 0001: why Spring Boot owns the
+  data and FastAPI owns the ML).
+- The rule behind these docs: no component is built until its metric and
+  gold fields are written down. The docs are the contract for later phases.
+- I changed the Postgres port in `docker-compose.yml` from "5432:5432" to
+  "127.0.0.1:5432:5432". Without an IP, Docker opens the port on all network
+  interfaces (0.0.0.0), so other computers on the same network could try to
+  reach the database. With 127.0.0.1 only my own computer can.
+- After the change, `docker compose config` showed no error, and
+  `docker compose up -d` gave a healthy container with the port on
+  127.0.0.1. The `playground` database was still there, because the data
+  lives in the `pgdata` volume.
+- `git status` said I was behind origin/main by 4 commits. Those were my
+  notes edited on GitHub. `git diff --name-only HEAD...origin/main` showed
+  they only touched `docs/daily/DAY-10.md` to `DAY-13.md`, so no conflict
+  with my files. I used `git pull --ff-only`, which only moves forward and
+  stops if it cannot (no merge commit).
+- I made two small commits: the compose fix and the four docs, added by file
+  name (not `git add .`), then pushed.
+  
 ### What confused me / still unclear
+- Why 127.0.0.1 and 0.0.0.0 are different
 
 ### What broke and how I fixed it (error message, cause, fix)
-
-### Answers to the check questions
+- After `docker compose exec ... psql -c "\l"` the screen stopped at `(END)`.
+  Cause: psql showed the list in a pager. Fix: press `q`.
 
 ### Commits and links
-
+- 88ad1c5 fix(infra): bind postgres port to 127.0.0.1
+- 19b8106 docs: analysis contract, terminology, evaluation spec v0, ADR 0001
+- Pushed to main (798cd9d..19b8106).
+  
 ### First step for tomorrow
+- Day 14: Weekly review 2 and buffer. Make sure Docker and SQL are solid,
+  because every later phase depends on them.
