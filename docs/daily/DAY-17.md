@@ -2,9 +2,9 @@
 
 **Week 3** · **Phase P2: Spring Boot and authentication** · **Blueprint:** Phase 2: Auth
 
-**Planned:** 5 h (Learn 2.5 · Build and test 2 · Document 0.5) · **Suggested date:** 2026-11-06 (Fri). Shift freely, the order matters, not the date.
+**Planned:** 5 h (Learn 2.5 · Build and test 2 · Document 0.5) 
 
-**Status:** ⬜ not started  (change to 🟨 in progress or ✅ done)
+**Status:** ✅ 
 
 ## 🎯 Goal for today
 `POST /api/auth/register` creates a user with a hashed password and returns clear errors.
@@ -26,11 +26,6 @@ This is the first full vertical slice (controller, service, repository, validati
 - [ ] Return 201 on success. Duplicate email returns 409. Validation errors return 400 with a clear JSON body (use `@RestControllerAdvice`).
 - [ ] Make sure passwords never appear in logs.
 - [ ] Write a unit test for the service (Mockito) and a controller test (MockMvc).
-
-## ✅ Check yourself (answer in your own words in the notes below)
-1. Why return a DTO and not the `User` entity?
-2. What is a salt and why does BCrypt include one?
-3. What HTTP status do you return for a duplicate email and why?
 
 ## 🏁 Definition of done
 - [ ] Register works from Swagger/curl
@@ -54,8 +49,6 @@ This is the first full vertical slice (controller, service, repository, validati
 ### What confused me / still unclear
 
 ### What broke and how I fixed it (error message, cause, fix)
-
-### Answers to the check questions
 
 ### Commits and links
 
