@@ -42,7 +42,7 @@ This is the first full vertical slice (controller, service, repository, validati
 
 # 📝 My notes (fill in at the end of the day)
 
-**Date:** &nbsp;&nbsp; **Actual hours:** &nbsp;&nbsp; **Energy (1-5):** &nbsp;&nbsp; **Plan followed?** yes / partly / no
+**Date:** 12-11-26 &nbsp;&nbsp; **Actual hours:** &nbsp;&nbsp; **Energy (1-5):** &nbsp;&nbsp; **Plan followed?** yes / partly / no
 
 ### What I learned (explain it as if to a friend, in my own words)
 
