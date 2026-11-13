@@ -4,7 +4,7 @@
 
 **Planned:** 5 h (Learn 3 · Build and test 1.5 · Document 0.5) · **Suggested date:** 2026-11-07 (Sat). Shift freely, the order matters, not the date.
 
-**Status:** ⬜ not started  (change to 🟨 in progress or ✅ done)
+**Status:** ✅ 
 
 ## 🎯 Goal for today
 The API is locked down by default: only health, Swagger and auth endpoints are public, and unauthenticated calls get 401 JSON.
@@ -46,7 +46,7 @@ Authentication vs authorization, with an example from your API.
 
 # 📝 My notes (fill in at the end of the day)
 
-**Date:** &nbsp;&nbsp; **Actual hours:** &nbsp;&nbsp; **Energy (1-5):** &nbsp;&nbsp; **Plan followed?** yes / partly / no
+**Date:** 13-11-26 &nbsp;&nbsp; **Actual hours:** &nbsp;&nbsp; **Energy (1-5):** &nbsp;&nbsp; **Plan followed?** yes / partly / no
 
 ### What I learned (explain it as if to a friend, in my own words)
 
