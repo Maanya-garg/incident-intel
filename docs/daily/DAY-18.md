@@ -2,7 +2,7 @@
 
 **Week 3** · **Phase P2: Spring Boot and authentication** · **Blueprint:** Phase 2: Auth
 
-**Planned:** 5 h (Learn 3 · Build and test 1.5 · Document 0.5) · **Suggested date:** 2026-11-07 (Sat). Shift freely, the order matters, not the date.
+**Planned:** 5 h (Learn 3 · Build and test 1.5 · Document 0.5)
 
 **Status:** ✅ 
 
